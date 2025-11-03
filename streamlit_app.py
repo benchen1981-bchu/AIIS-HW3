@@ -1,58 +1,4 @@
 import streamlit as st
-#import joblib
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.pipeline import Pipeline
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.metrics import classification_report, confusion_matrix
-import joblib
-
-from spam_classifier import load_model, build_pipeline
-
-st.title("Spam Email Classifier")
-
-model_name = st.selectbox("Select model", ["Naive Bayes", "Logistic Regression", "SVM"])
-# Hyper‐parameter inputs:
-if model_name == "Naive Bayes":
-    alpha = st.slider("Alpha (smoothing)", 0.1, 2.0, 1.0, 0.1)
-    params = {'clf__alpha': alpha}
-elif model_name == "Logistic Regression":
-    C = st.slider("C (inverse regularization)", 0.01, 10.0, 1.0, 0.01)
-    params = {'clf__C': C, 'clf__solver': 'liblinear'}
-elif model_name == "SVM":
-    C = st.slider("C", 0.01, 10.0, 1.0, 0.01)
-    kernel = st.selectbox("Kernel", ["linear", "rbf"])
-    params = {'clf__C': C, 'clf__kernel': kernel, 'clf__probability': True}
-
-message = st.text_area("Enter email message (subject + body)")
-
-if st.button("Classify"):
-    # Build pipeline with selected model + params:
-    if model_name == "Naive Bayes":
-        pipe = build_pipeline(model_name='nb', **params)
-    elif model_name == "Logistic Regression":
-        pipe = build_pipeline(model_name='lr', **params)
-    else:
-        pipe = build_pipeline(model_name='svm', **params)
-    # Load pre-trained model? Or train quickly? Better: load a base model, then fine-tune?
-    # For simplicity: load a saved model for each type; or train on the fly (but may be slow).
-    model = pipe.fit(...)  # or load
-    pred = pipe.predict([message])[0]
-    prob = pipe.predict_proba([message])[0]
-    st.write("Prediction:", pred)
-    st.write("Probability:", prob)
-
-# Optionally: Show evaluation metrics of base model
-
-
-##
-streamlit_app.py
-
-import streamlit as st
 import joblib
 from src.model_training import build_pipeline
 from src.data_preparation import clean_text
@@ -90,6 +36,7 @@ if st.button("Classify"):
     prob = model.predict_proba([msg])[0].max()
 
     st.success(f"**Prediction:** {pred.upper()} (Confidence: {prob:.2f})")
+
 
 
 
