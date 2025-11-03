@@ -30,3 +30,11 @@ def train_and_save(X_train, y_train, model_type='nb', save_path='../models'):
     joblib.dump(pipe, model_path)
     print(f"Model saved to {model_path}")
     return pipe
+
+if __name__ == "__main__":
+    from .data_preparation import load_raw_data, preprocess_and_split
+    df = load_raw_data()
+    X_train, X_test, y_train, y_test = preprocess_and_split(df)
+    train_and_save(X_train, y_train, model_type='nb', save_path='models')
+    train_and_save(X_train, y_train, model_type='lr', save_path='models')
+    train_and_save(X_train, y_train, model_type='svm', save_path='models')
